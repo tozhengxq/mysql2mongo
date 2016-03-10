@@ -1,8 +1,11 @@
 # mysql2mongo
 
 cd mysql2mongo
-go build 
+
+go build
+ 
 ./mysql2mongo --conf /tmp/mysql2mongo.cnf
+
 
 # conf example
 
