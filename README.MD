@@ -2,7 +2,6 @@
 
 ``` python
 cd mysql2mongo
-
 go build
  
 ./mysql2mongo --conf /tmp/mysql2mongo.cnf
