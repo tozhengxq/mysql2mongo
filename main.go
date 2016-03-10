@@ -2,16 +2,20 @@ package main
 
 import (
 	"database/sql"
+	"flag" // 只是读取命令行参数，返回参数value的指针
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/tozhengxq/mysql2mongo/config"
 	"labix.org/v2/mgo"
 )
 
-const (
-	URL  string = "localhost:27017"
-	URL2 string = "root:123456@tcp(localhost:3306)/data"
-	SQL  string = "select Order_id,Status,type,Paytype,Paystatus,Pay_trade_no,Source,Consumption_type,Suspicious,Sid,Site_id,Dorm_id,Dormentry_id,Shop_id,Uid,Service_eva,Delivery_eva,Food_eva,Food_num,Food_amount,Ship_fee,Coupon_discount,Promotion_discount,Discount,Order_amount,Delivery_id,Add_time,Confirm_time,Send_time,Expect_date,Delivery_type,Expect_time,Expect_timeslot,Order_mark,Uname,Portrait,Phone,Phone_addr,Buy_times,Address1,Address2,Dormitory,Time_deliver,Credit,Ip,Coupon_code,Feature,Remark,Evaluation,Expect_start_time,Expect_end_time from 59_order;"
-)
+var configFile *string = flag.String("conf", "/etc/mysql2mongo.conf", "mysql2mongo config file")
+
+//const (
+//	URL  string = "localhost:27017"
+//	URL2 string = "root:123456@tcp(localhost:3306)/data"
+//	SQL  string = "select Order_id,Status,type,Paytype,Paystatus,Pay_trade_no,Source,Consumption_type,Suspicious,Sid,Site_id,Dorm_id,Dormentry_id,Shop_id,Uid,Service_eva,Delivery_eva,Food_eva,Food_num,Food_amount,Ship_fee,Coupon_discount,Promotion_discount,Discount,Order_amount,Delivery_id,Add_time,Confirm_time,Send_time,Expect_date,Delivery_type,Expect_time,Expect_timeslot,Order_mark,Uname,Portrait,Phone,Phone_addr,Buy_times,Address1,Address2,Dormitory,Time_deliver,Credit,Ip,Coupon_code,Feature,Remark,Evaluation,Expect_start_time,Expect_end_time from 59_order;"
+//)
 
 type Order struct {
 	Order_id           uint64
@@ -100,24 +104,30 @@ var (
 )
 
 func main() {
+	flag.Parse() // 解析flag
+	conf, err := config.ParseConfigfile(*configFile)
+	if err != nil {
+		fmt.Println(err)
+	}
+	//fmt.Println(conf.Mysql.NullCloums[0])
 
 	// 连接mongo
-	session, err := mgo.Dial(URL)
+	session, err := mgo.Dial(conf.Mongo.URL)
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
-	db := session.DB("test")
-	collection := db.C("t1")
+	db := session.DB(conf.Mongo.DB)
+	collection := db.C(conf.Mongo.Collection)
 
 	// 连接mysql
-	dbm, err := sql.Open("mysql", URL2)
+	dbm, err := sql.Open("mysql", conf.Mysql.URL)
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer dbm.Close()
-	rows, err := dbm.Query(SQL)
+	rows, err := dbm.Query(conf.Mysql.SQL)
 	if err != nil {
 		fmt.Println(err)
 	}
