@@ -1,14 +1,15 @@
 # mysql2mongo
 
+``` python
 cd mysql2mongo
 
 go build
  
 ./mysql2mongo --conf /tmp/mysql2mongo.cnf
-
+``` 
 
 # conf example
-
+``` python
 mysql :
 
  url : "root:123456@tcp(localhost:3306)/data"
@@ -29,3 +30,4 @@ mongo :
  dbname : "test"
 			  
  collection : "t1"
+```
