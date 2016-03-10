@@ -11,11 +11,6 @@ import (
 
 var configFile *string = flag.String("conf", "/etc/mysql2mongo.conf", "mysql2mongo config file")
 
-//const (
-//	URL  string = "localhost:27017"
-//	URL2 string = "root:123456@tcp(localhost:3306)/data"
-//	SQL  string = "select Order_id,Status,type,Paytype,Paystatus,Pay_trade_no,Source,Consumption_type,Suspicious,Sid,Site_id,Dorm_id,Dormentry_id,Shop_id,Uid,Service_eva,Delivery_eva,Food_eva,Food_num,Food_amount,Ship_fee,Coupon_discount,Promotion_discount,Discount,Order_amount,Delivery_id,Add_time,Confirm_time,Send_time,Expect_date,Delivery_type,Expect_time,Expect_timeslot,Order_mark,Uname,Portrait,Phone,Phone_addr,Buy_times,Address1,Address2,Dormitory,Time_deliver,Credit,Ip,Coupon_code,Feature,Remark,Evaluation,Expect_start_time,Expect_end_time from 59_order;"
-//)
 
 type Order struct {
 	Order_id           uint64
